@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 
 class Solver
@@ -8,38 +7,38 @@ class Solver
     public int k;
     int[][] map;
     int[][] sum_map;
-    int[][] location;
+    int[][] loc;
+    int[] I;
+    int[] J;
+    int[] X;
+    int[] Y;
 
-    BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
     Scanner rd = new Scanner(System.in);
-    String input_str;
-    String[] tokens;
 
     public int[] ans;
 
-    void GetArgs() throws IOException
+    void GetArgs() 
     {
         this.n = rd.nextInt();
         this.m = rd.nextInt();
         this.map = new int[this.n][this.m];
         this.sum_map = new int[this.n][this.m];
         for(int i = 0; i < this.n; i++) {
-            this.input_str = bf.readLine();
-            this.tokens = this.input_str.split(" ", this.m);
             for(int j = 0; j < this.m; j++) {
-                this.map[i][j] = Integer.parseInt(this.tokens[j]);
+                this.map[i][j] = rd.nextInt();
             }
         }
         this.k = rd.nextInt();
         this.ans = new int[this.k];
-        this.location = new int[this.k][4];
+        this.I = new int[this.k];
+        this.J = new int[this.k];
+        this.X = new int[this.k];
+        this.Y = new int[this.k];
         for(int i = 0 ; i < this.k; i++) {
-            this.input_str = bf.readLine();
-            this.tokens = this.input_str.split(" ", 4);
-            this.location[i][0] = Integer.parseInt(this.tokens[0]) - 1;
-            this.location[i][1] = Integer.parseInt(this.tokens[1]) - 1;
-            this.location[i][2] = Integer.parseInt(this.tokens[2]) - 1;
-            this.location[i][3] = Integer.parseInt(this.tokens[3]) - 1;
+        	this.I[i] = rd.nextInt() - 1;
+        	this.J[i] = rd.nextInt() - 1;
+        	this.X[i] = rd.nextInt() - 1;
+        	this.Y[i] = rd.nextInt() - 1;
         }
     }
 
@@ -63,20 +62,17 @@ class Solver
         }
         
         for(int i = 0; i < this.k; i++) {
-        	this.ans[i] += this.sum_map[this.location[i][2]][this.location[i][3]];
-        	if(this.location[i][0] > 0 && this.location[i][1] > 0) {
-        		this.ans[i] -= this.sum_map[this.location[i][0]-1][this.location[i][3]] +
-        				this.sum_map[this.location[i][2]][this.location[i][1]-1] -
-        				this.sum_map[this.location[i][0]][this.location[i][1]];
+        	this.ans[i] += this.sum_map[this.X[i]][this.Y[i]];
+        	if(this.I[i] > 0 && this.J[i] > 0) {
+        		this.ans[i] -= this.sum_map[this.I[i]-1][this.Y[i]] +
+        				this.sum_map[this.X[i]][this.J[i]-1] -
+        				this.sum_map[this.I[i]-1][this.J[i]-1];
         	}
-        	if(this.location[i][0] == 0 && this.location[i][1] > 0) {
-        		this.ans[i] -= 
-        				this.sum_map[this.location[i][2]][this.location[i][1]-1] -
-        				this.sum_map[this.location[i][0]][this.location[i][1]];
+        	if(this.I[i] == 0 && this.J[i] > 0) {
+        		this.ans[i] -= this.sum_map[this.X[i]][this.J[i]-1]; 
         	}
-        	if(this.location[i][0] > 0 && this.location[i][1] == 0) {
-        		this.ans[i] -= this.sum_map[this.location[i][0]-1][this.location[i][3]] -
-        				this.sum_map[this.location[i][0]][this.location[i][1]];
+        	if(this.I[i] > 0 && this.J[i] == 0) {
+        		this.ans[i] -= this.sum_map[this.I[i]-1][this.Y[i]];
         	}
         	
         }
@@ -87,12 +83,8 @@ public class Main
 {
     public static void main(String args[])
     {
-        Solver a = new Solver();
-        try {
-            a.GetArgs();
-        } catch (IOException e) {
-            System.out.println("a");
-        }
+    	Solver a = new Solver();
+    	a.GetArgs();
     	a.Compute();
     	for(int i = 0; i < a.k; i++) {
     		System.out.println(a.ans[i]);
